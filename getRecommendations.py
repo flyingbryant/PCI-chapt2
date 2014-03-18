@@ -23,3 +23,26 @@ def getRecommendations(prefs, person, similarity = sim_pearson):
 	rankings.reverse()
 	return rankings
 
+
+
+def getRecommendedItems(prefs, itemMatch, user):
+	userRatings=prefs[user]
+	scores={}
+	totalSim={}
+
+	for(item,rating) in userRatings.items():
+		for(similarity,item2) in itemMatch[item]:
+			if item2 in userRatings: continue
+			scores.setdefault(item2,0)
+			scores[item2]+=similarity*rating
+
+			totalSim.setdefault(item2,0)
+			totalSim[item2]+=similarity
+
+	rankings=[(score/totalSim[item],item) for item ,score in scores.items()]
+
+	rankings.sort()
+	rankings.reverse()
+	return rankings
+	
+
